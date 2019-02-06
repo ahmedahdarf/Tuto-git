@@ -1,0 +1,54 @@
+//Question 1:
+db.getCollection("emplois").distinct('Module')
+
+//Question 2:
+use TP1;
+db.getCollection("emplois").aggregate(
+    [
+        { 
+            "$group" : {
+                "_id" : {
+                    "matiere" : "$matiere", 
+                    "activite" : "$activite"
+                }, 
+                "SUM(duree)" : {
+                    "$sum" : "$duree"
+                }
+            }
+        }, 
+        { 
+            "$project" : {
+                "matiere" : "$_id.matiere", 
+                "SUM(duree)" : "$SUM(duree)", 
+                "activite" : "$_id.activite",
+                _id:0
+            }
+        }
+    ], 
+    { 
+        "allowDiskUse" : true
+    }
+);
+
+//Question 3
+db.getCollection("emplois").distinct("matiere",{"activite":"cours", "activite":{$exists:true}})
+
+//Question 5:
+db.getCollection("emplois").find(
+{activite:"TP"},
+{
+"matiere":1,"duree":1,"salle":1,
+"activite":1
+}
+	).sort({"duree":-1}).limit(3)
+
+//
+Question 6:
+db.getCollection("emplois").find({_id:ObjectId("5c50ed06bc47b17a12d4546b")},{ "duree" : "$duree","Module" : "$module","activite" : "$activite"
+}
+).sort(
+{'activite':-1,"Module" : NumberInt(1)
+ }
+);
+
+//question 7:
